@@ -43,8 +43,6 @@ class CeRes(object):
         momresprange=(-10,5)
         momtitle="Momentum at "
         momxlabel="Momentum (MeV)"
-        #print(len(Mom[0]),Mom[0:10][0])
-        #print(len(MomReso[0]),MomReso[0:10][0])
 
         self.TrkLoc = [None]*3
         self.HOriginMom = MyHist.MyHist(name="OriginMom",label="MC Origin",bins=nMomBins, range=momrange,title="Momentum at Origin",xlabel="Momentum (MeV)")
@@ -110,9 +108,6 @@ class CeRes(object):
 
     def Loop(self,files):
         elPDG = 11
-
-        rfile = uproot.open(files[0]+":EventNtuple")
-        print(rfile.keys())
         ibatch = 0
         np.set_printoptions(precision=5,floatmode='fixed')
         print("Processing batch ",end=' ')
@@ -315,6 +310,7 @@ class CeRes(object):
         self.HTgtLatestResp.plot(latestresp)
         self.HTgtLatestRespRef.plot(latestresp)
         self.HTgtLatestRespNotRef.plot(latestresp)
+        latestresp.legend(loc="upper left")
 
     def Write(self,savefile):
         with h5py.File(savefile, 'w') as hdf5file:

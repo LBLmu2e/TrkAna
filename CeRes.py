@@ -178,7 +178,6 @@ class CeRes(object):
                 segsMC = SegsMC[(SegsMC.sid == sid) & (SegsMC.mom.z() > 0.0) ]
                 momMC = segsMC.mom.magnitude()
                 hasMC = ak.count_nonzero(momMC,axis=1)==1
-                print(sid,len(Segs),len(segs),len(mom),len(hasmom),len(momMC),len(goodFit))
                 good = hasMC & goodFit & hasmom
                 reflectable = good & noTSDA
                 notreflectable = good & np.logical_not(noTSDA)

@@ -30,11 +30,12 @@ def TargetFoil(tgtz):
 
 
 class CeRes(object):
-    def __init__(self,momrange,minNHits,minFitCon):
+    def __init__(self,momrange,costrange,minNHits,minFitCon,minTrkQual):
         self.MomRange = momrange
+        self.CosTRange = costrange
         self.minNHits = minNHits
         self.minFitCon = minFitCon
-
+        self.minTrkQual = minTrkQual
 
         nDeltaMomBins = 200
         nMomBins = 200
@@ -61,13 +62,13 @@ class CeRes(object):
         dmomxlabel = "$\\Delta$ Momentum (MeV)"
         # momentum in tracker
         for isid in range(len(self.TrackerSIDs)):
-            loc = SID.SurfaceName(self.TrackerSIDs[isid])
-            self.HTrkFitMom[isid] = MyHist.MyHist(name=loc+"Mom",label="Fit",bins=nMomBins, range=momrange,title="Momentum at "+loc,xlabel=momxlabel)
-            self.HTrkMCMom[isid] = MyHist.MyHist(name=loc+"Mom",label="MC",bins=nMomBins, range=momrange,title="Momentum at "+loc,xlabel=momxlabel)
-            self.HTrkResoMom[isid] = MyHist.MyHist(name=loc+"Resolution",label="",bins=nDeltaMomBins, range=momresorange,title=momresotitle,xlabel=dmomxlabel)
-            self.HTrkRespMom[isid] = MyHist.MyHist(name=loc+"Response",label="All",bins=nDeltaMomBins, range=momresprange,title=momresptitle,xlabel=dmomxlabel)
-            self.HTrkRefRespMom[isid] = MyHist.MyHist(name=loc+"Response",label="Reflectable",bins=nDeltaMomBins, range=momresprange,title=momresptitle,xlabel=dmomxlabel)
-            self.HTrkNotRefRespMom[isid] = MyHist.MyHist(name=loc+"Response",label="Not Reflectable",bins=nDeltaMomBins, range=momresprange,title=momresptitle,xlabel=dmomxlabel)
+            loc = "@"+SID.SurfaceName(self.TrackerSIDs[isid])
+            self.HTrkFitMom[isid] = MyHist.MyHist(name=loc+"Mom",label="Fit",bins=nMomBins, range=momrange,title="Momentum"+loc,xlabel=momxlabel)
+            self.HTrkMCMom[isid] = MyHist.MyHist(name=loc+"Mom",label="MC",bins=nMomBins, range=momrange,title="Momentum"+loc,xlabel=momxlabel)
+            self.HTrkResoMom[isid] = MyHist.MyHist(name=loc+"Resolution",label="",bins=nDeltaMomBins, range=momresorange,title=momresotitle+loc,xlabel=dmomxlabel)
+            self.HTrkRespMom[isid] = MyHist.MyHist(name=loc+"Response",label="All",bins=nDeltaMomBins, range=momresprange,title=momresptitle+loc,xlabel=dmomxlabel)
+            self.HTrkRefRespMom[isid] = MyHist.MyHist(name=loc+"Response",label="Reflectable",bins=nDeltaMomBins, range=momresprange,title=momresptitle+loc,xlabel=dmomxlabel)
+            self.HTrkNotRefRespMom[isid] = MyHist.MyHist(name=loc+"Response",label="Not Reflectable",bins=nDeltaMomBins, range=momresprange,title=momresptitle+loc,xlabel=dmomxlabel)
 
         # target intersections
         # momentum at target intersections
@@ -98,7 +99,7 @@ class CeRes(object):
         self.HTgtFoilMC = MyHist.MyHist(name="HTgtFoil",bins=37,range=foilrange,label="MC",title=foiltitle,xlabel=foilxlabel)
         self.HOriginFoil = MyHist.MyHist(name="HTgtFoil",bins=37,range=foilrange,label="MC Origin",title=foiltitle,xlabel=foilxlabel)
         costrange = [-0.8,0.8]
-        costtitle ="Target Momentum Cos($\\Theta$)"
+        costtitle ="Target Cos($\\Theta$)"
         costxlabel="Cos($\\Theta$)"
         self.HTgtCosT = MyHist.MyHist(name="HTgtCosT",bins=100,range=costrange,label="Fit",title=costtitle,xlabel=costxlabel)
         self.HTgtCosTRef = MyHist.MyHist(name="HTgtCosT",bins=100,range=costrange,label="Fit (Reflectable)",title=costtitle,xlabel=costxlabel)
@@ -106,12 +107,16 @@ class CeRes(object):
         self.HTgtCosTMC = MyHist.MyHist(name="HTgtCosT",bins=100,range=costrange,label="MC",title=costtitle,xlabel=costxlabel)
         self.HOriginCosT = MyHist.MyHist(name="HTgtCosT",bins=100,range=costrange,label="MC Origin",title=costtitle,xlabel=costxlabel)
 
+        self.HTrkQual = MyHist.MyHist(name="HTrkQual",bins=100,range=[0.0,1.0],label="TrkQual",title="Track Quality",xlabel="ANN Result")
+        self.HFitCon = MyHist.MyHist(name="HFitCon",bins=100,range=[0.0,1.0],label="FitCon",title="Fit Consistency",xlabel="")
+        self.HNHits = MyHist.MyHist(name="HNHits",bins=100,range=[0.5,100.5],label="NActive",title="Fit N Hits",xlabel="N Hits")
+
     def Loop(self,files):
         elPDG = 11
         ibatch = 0
         np.set_printoptions(precision=5,floatmode='fixed')
         print("Processing batch ",end=' ')
-        for batch,rep in uproot.iterate(files,filter_name="/evtinfo|trk|trksegs|trkmcsim|trksegsmc/i",report=True):
+        for batch,rep in uproot.iterate(files,filter_name="/evtinfo|trk|trksegs|trkmcsim|trksegsmc|trkqual/i",report=True):
             print(ibatch,end=' ')
             ibatch = ibatch+1
             runnum = batch['run']
@@ -120,21 +125,26 @@ class CeRes(object):
             segs = batch['trksegs'] # track fit samples
             nhits = batch['trk.nactive']  # track N hits
             fitcon = batch['trk.fitcon']  # track fit consistency
+            trkQual = batch['trkqual.result']  # track fit quality
             trkMC = batch['trkmcsim']  # MC genealogy of particles
             segsMC = batch['trksegsmc'] # SurfaceStep infor for true primary particle
             # should be 1 track/event
             assert(ak.sum(ak.count_nonzero(nhits,axis=1)!=1) == 0)
             Segs = segs[:,0]
             FitCon = fitcon[:,0]
-            Nhits = nhits[:,0]
-            goodFit = (Nhits >= self.minNHits) & (FitCon > self.minFitCon)
-            TSDASeg = Segs[Segs.sid == SID.TSDA() ]
-            noTSDA = ak.num(TSDASeg)==0
-            # now MC
+            NHits = nhits[:,0]
+            TrkQual = trkQual[:,0]
+            assert(len(Segs)==len(NHits))
+
+            self.HTrkQual.fill(np.array(TrkQual))
+            self.HFitCon.fill(np.array(FitCon))
+            self.HNHits.fill(np.array(NHits))
+
+            # define good MC selection first, to allow downstream comparisons
             SegsMC = segsMC[:,0] # segments (of 1st MC match) of 1st track
             TrkMC = trkMC[:,0,0] # primary MC match of 1st track
             # basic consistency test
-            assert((len(runnum) == len( Segs)) & (len(Segs) == len(SegsMC)) & (len(Segs) == len(TrkMC)) & (len(Nhits) == len(Segs)))
+            assert((len(runnum) == len( Segs)) & (len(Segs) == len(SegsMC)) & (len(Segs) == len(TrkMC)) & (len(NHits) == len(Segs)))
             goodMC = (TrkMC.pdg == elPDG) & (TrkMC.trkrel._rel == 0)
             OMom = TrkMC[goodMC].mom.magnitude()
             goodMC = goodMC & (OMom>self.MomRange[0]) & (OMom < self.MomRange[1])
@@ -143,18 +153,32 @@ class CeRes(object):
             self.HOriginRho.fill(np.array(TrkMC[goodMC].pos.rho()))
             self.HOriginCosT.fill(np.array(TrkMC[goodMC].mom.cosTheta()))
             self.HOriginFoil.fill(np.array(list(map(TargetFoil,TrkMC[goodMC].pos.z()))))
+
+            # truncate accordingly
             SegsMC = SegsMC[goodMC]
             Segs = Segs[goodMC]
+            NHits = NHits[goodMC]
+            FitCon = FitCon[goodMC]
+            TrkQual = TrkQual[goodMC]
+            midsegs = Segs[(Segs.sid == SID.TT_Mid()) & (Segs.mom.z() > 0.0) ]
+            CosT = ak.flatten(midsegs.mom.cosTheta())
+            goodFit = (NHits >= self.minNHits) & (FitCon > self.minFitCon) & (TrkQual > self.minTrkQual) & (CosT > self.CosTRange[0]) & (CosT < self.CosTRange[1])
+            TSDASeg = Segs[Segs.sid == SID.TSDA() ]
+            noTSDA = ak.num(TSDASeg)==0
+
+
             # sample the fits at the specified
             for isid in range(len(self.TrackerSIDs)) :
                 sid = self.TrackerSIDs[isid]
                 segs = Segs[(Segs.sid == sid) & (Segs.mom.z() > 0.0) ]
+                assert(len(segs) == len(Segs))
                 mom = segs.mom.magnitude()
                 mom = mom[(mom > self.MomRange[0]) & (mom < self.MomRange[1])]
                 hasmom = ak.count_nonzero(mom,axis=1)==1
                 segsMC = SegsMC[(SegsMC.sid == sid) & (SegsMC.mom.z() > 0.0) ]
                 momMC = segsMC.mom.magnitude()
                 hasMC = ak.count_nonzero(momMC,axis=1)==1
+                print(sid,len(Segs),len(segs),len(mom),len(hasmom),len(momMC),len(goodFit))
                 good = hasMC & goodFit & hasmom
                 reflectable = good & noTSDA
                 notreflectable = good & np.logical_not(noTSDA)
@@ -180,7 +204,7 @@ class CeRes(object):
             #foil response
             reflectable = noTSDA
             notreflectable = np.logical_not(noTSDA)
-            tgtsegs = Segs[(Segs.sid == SID.ST_Foils())]
+            tgtsegs = Segs[(Segs.sid == SID.ST_Foils()) & goodFit]
             tgtsegsref = tgtsegs[reflectable]
             tgtsegsnotref = tgtsegs[notreflectable]
             tgtmom = tgtsegs.mom.magnitude()
@@ -268,8 +292,14 @@ class CeRes(object):
         print()
 
 
+    def PlotQuality(self):
+        fig, (atrkqual,anhits,afitcon) = plt.subplots(1,3,layout='constrained', figsize=(15,5))
+        self.HTrkQual.plot(atrkqual)
+        self.HNHits.plot(anhits)
+        self.HFitCon.plot(afitcon)
+
     def PlotTrackerMomentum(self):
-        fig, (amom,areso,aresp) = plt.subplots(3,3,layout='constrained', figsize=(15,20))
+        fig, (amom,areso,aresp) = plt.subplots(3,3,layout='constrained', figsize=(15,15))
         for isid in range(len(self.TrackerSIDs)) :
             self.HTrkFitMom[isid].plot(amom[isid])
             self.HTrkMCMom[isid].plot(amom[isid])
@@ -295,12 +325,14 @@ class CeRes(object):
         self.HTgtFoilNotRef.plot(afoil)
         self.HTgtFoilMC.plot(afoil)
         self.HOriginFoil.plot(afoil)
+        afoil.legend(loc="upper left")
         # Cos(theta)
         self.HTgtCosT.plot(acost)
         self.HTgtCosTRef.plot(acost)
         self.HTgtCosTNotRef.plot(acost)
         self.HTgtCosTMC.plot(acost)
         self.HOriginCosT.plot(acost)
+        acost.legend(loc="upper left")
         # Response: Average
         self.HTgtAvgResp.plot(avgresp)
         self.HTgtAvgRespRef.plot(avgresp)

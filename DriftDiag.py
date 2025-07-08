@@ -28,7 +28,7 @@ class DriftDiag(object):
         dresbins = 100
         dresrange = (-2.5,2.5)
         drestitle = "Drift Resolution"
-        dresxlabel = "R_{drift} - MC DOCA (mm)"
+        dresxlabel = "$R_{drift}$ - MC DOCA (mm)"
         self.Hdres = MyHist.MyHist(name="dres",label="All",title=drestitle,xlabel=dresxlabel,bins=dresbins,range=dresrange)
         self.Hstate = MyHist.MyHist(name="state",label="All",title="Hit State",bins=5,range=[-3.5,1.5])
         nhitsrange = [-0.5,99.5]
@@ -74,7 +74,6 @@ class DriftDiag(object):
             # i.e., ``clip the tail'' of off-track hits
             mask = ak.local_index(trkhitsmc, axis=1) < ak.num(trkhits, axis=1)
             trkhitsmc = trkhitsmc[mask]
-            print(len(trkhits),len(trkhitsmc))
             self.Hdres.fill(np.array(ak.flatten(trkhits.rdrift-trkhitsmc.dist)))
         print()
 

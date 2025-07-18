@@ -142,12 +142,14 @@ class DeRes(object):
 #        for isid in range(len(self.TrackerSIDs)):
 #            loc = "@"+SID.SurfaceName(self.TrackerSIDs[isid])
 
-        self.HTDmomall = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="Pt/Pz (all)",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDmomall = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="Pz/Pt (all)",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDLHall = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="$\\Lambda/R$ (all)",title="TanDip",xlabel="Tan($\\lambda$)")
         self.HTDparall = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="tanDip (all)",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDmom = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="Pt/Pz@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDmom = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="Pz/Pt@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDLH = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="$\\Lambda/R$@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
         self.HTDpar = MyHist.MyHist(name="HTD",bins=100,range=[-1,1.5],label="tanDip@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.Hd0 = MyHist.MyHist(name="Hd0",bins=100,range=[0,200],label="d0",title="d0@TT_Front",xlabel="d\\$_{0}$ (mm)")
-        self.Hmaxr = MyHist.MyHist(name="Hmaxr",bins=100,range=[300,700],label="RMax",title="maxr@TT_Front",xlabel="R\\$_{max}$ (mm)")
+        self.Hd0 = MyHist.MyHist(name="Hd0",bins=100,range=[0,200],label="d0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
+        self.Hmaxr = MyHist.MyHist(name="Hmaxr",bins=100,range=[300,700],label="RMax",title="maxr@TT_Front",xlabel="R$_{max}$ (mm)")
 
     def Loop(self,files):
         elPDG = 11
@@ -344,12 +346,14 @@ class DeRes(object):
             self.HTgtFoilMC.fill(np.array(list(map(TargetFoil,ak.flatten(tgtsegsmc.pos.z())))))
 
             # legacy
-            self.HTDmomall.fill(np.array(ak.flatten(Segs.mom.cosTheta())))
-            self.HTDparall.fill(np.array(ak.flatten(lhpars.tanDip)))
+            self.HTDmomall.fill(np.array(ak.flatten(Segs.mom.Z()/Segs.mom.rho())))
+            self.HTDLHall.fill(np.array(ak.flatten(lhpars.tanDip)))
+            self.HTDparall.fill(np.array(ak.flatten(lhpars.lam/lhpars.rad)))
             flhpars = lhpars[Segs.sid == SID.TT_Front()]
             fsegs = Segs[Segs.sid == SID.TT_Front()]
-            self.HTDmom.fill(np.array(ak.flatten(fsegs.mom.cosTheta())))
+            self.HTDmom.fill(np.array(ak.flatten(fsegs.mom.Z()/fsegs.mom.rho())))
             flhpars = lhpars[Segs.sid == SID.TT_Front()]
+            self.HTDLH.fill(np.array(ak.flatten(flhpars.lam/flhpars.rad)))
             self.HTDpar.fill(np.array(ak.flatten(flhpars.tanDip)))
             self.Hd0.fill(np.array(ak.flatten(flhpars.d0)))
             self.Hmaxr.fill(np.array(ak.flatten(flhpars.maxr)))
@@ -449,10 +453,12 @@ class DeRes(object):
     def PlotLegacy(self):
         fig, (atd,ad0,armax) = plt.subplots(1,3,layout='constrained', figsize=(15,5))
         self.HTDparall.plot(atd)
+        self.HTDLHall.plot(atd)
         self.HTDmomall.plot(atd)
         self.HTDpar.plot(atd)
         self.HTDmom.plot(atd)
-        atd.legend(loc="upper right")
+        self.HTDLH.plot(atd)
+        atd.legend(loc="upper left")
         self.Hd0.plot(ad0)
         self.Hmaxr.plot(armax)
 

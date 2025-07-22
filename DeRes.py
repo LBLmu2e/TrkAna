@@ -75,11 +75,12 @@ class DeRes(object):
         NMatxlabel = "N Intersections"
         NMattitle = "KKFit Intersections"
         NMattitleMC = "MC Intersections"
-        self.HNST = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInter",label="ST",xlabel=NMatxlabel,title=NMattitle)
+        self.HNSTF = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInter",label="ST Foil",xlabel=NMatxlabel,title=NMattitle)
+        self.HNSTC = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInter",label="ST Cyl.",xlabel=NMatxlabel,title=NMattitle)
         self.HNIPA = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInter",label="IPA",xlabel=NMatxlabel,title=NMattitle)
         self.HNTSDA = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInter",label="TSDA",xlabel=NMatxlabel,title=NMattitle)
         self.HNOPA = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInter",label="OPA",xlabel=NMatxlabel,title=NMattitle)
-        self.HNSTMC = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInterMC",label="ST",xlabel=NMatxlabel,title=NMattitleMC)
+        self.HNSTFMC = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInterMC",label="ST",xlabel=NMatxlabel,title=NMattitleMC)
         self.HNIPAMC = MyHist.MyHist(bins=nNMatBins,range=NMatRange,name="NInterMC",label="IPA",xlabel=NMatxlabel,title=NMattitleMC)
         # momentum change
         nDMomBins = 50
@@ -110,64 +111,70 @@ class DeRes(object):
         rhotitle ="Target Rho"
         rhoxlabel = "Rho (mm)"
         rhonbins=50
-        self.HTgtRho = MyHist.MyHist(name="HTgtRho",bins=rhonbins,range=rhorange,label="Fit",title=rhotitle,xlabel=rhoxlabel)
-        self.HTgtRhoRef = MyHist.MyHist(name="HTgtRho",bins=rhonbins,range=rhorange,label="Fit (NTSDA == 0)",title=rhotitle,xlabel=rhoxlabel)
-        self.HTgtRhoNotRef = MyHist.MyHist(name="HTgtRho",bins=rhonbins,range=rhorange,label="Fit (NTSDA > 0)",title=rhotitle,xlabel=rhoxlabel)
-        self.HTgtRhoMC = MyHist.MyHist(name="HTgtRho",bins=rhonbins,range=rhorange,label="MC",title=rhotitle,xlabel=rhoxlabel)
-        self.HOriginRho = MyHist.MyHist(name="HTgtRho",bins=rhonbins,range=rhorange,label="MC Origin",title=rhotitle,xlabel=rhoxlabel)
+        self.HTgtRho = MyHist.MyHist(name="TgtRho",bins=rhonbins,range=rhorange,label="Fit",title=rhotitle,xlabel=rhoxlabel)
+        self.HTgtRhoRef = MyHist.MyHist(name="TgtRho",bins=rhonbins,range=rhorange,label="Fit (NTSDA == 0)",title=rhotitle,xlabel=rhoxlabel)
+        self.HTgtRhoNotRef = MyHist.MyHist(name="TgtRho",bins=rhonbins,range=rhorange,label="Fit (NTSDA > 0)",title=rhotitle,xlabel=rhoxlabel)
+        self.HTgtRhoMC = MyHist.MyHist(name="TgtRho",bins=rhonbins,range=rhorange,label="MC",title=rhotitle,xlabel=rhoxlabel)
+        self.HOriginRho = MyHist.MyHist(name="TgtRho",bins=rhonbins,range=rhorange,label="MC Origin",title=rhotitle,xlabel=rhoxlabel)
         foilrange = [-0.5,36.5]
         foiltitle ="Target Foil"
         foilxlabel="Foil #"
         foilnbins=37
-        self.HTgtFoil = MyHist.MyHist(name="HTgtFoil",bins=foilnbins,range=foilrange,label="Fit",title=foiltitle,xlabel=foilxlabel)
-        self.HTgtFoilRef = MyHist.MyHist(name="HTgtFoil",bins=foilnbins,range=foilrange,label="Fit (NTSDA == 0)",title=foiltitle,xlabel=foilxlabel)
-        self.HTgtFoilNotRef = MyHist.MyHist(name="HTgtFoil",bins=foilnbins,range=foilrange,label="Fit (NTSDA > 0)",title=foiltitle,xlabel=foilxlabel)
-        self.HTgtFoilMC = MyHist.MyHist(name="HTgtFoil",bins=foilnbins,range=foilrange,label="MC",title=foiltitle,xlabel=foilxlabel)
-        self.HOriginFoil = MyHist.MyHist(name="HTgtFoil",bins=foilnbins,range=foilrange,label="MC Origin",title=foiltitle,xlabel=foilxlabel)
+        self.HTgtFoil = MyHist.MyHist(name="TgtFoil",bins=foilnbins,range=foilrange,label="Fit",title=foiltitle,xlabel=foilxlabel)
+        self.HTgtFoilRef = MyHist.MyHist(name="TgtFoil",bins=foilnbins,range=foilrange,label="Fit (NTSDA == 0)",title=foiltitle,xlabel=foilxlabel)
+        self.HTgtFoilNotRef = MyHist.MyHist(name="TgtFoil",bins=foilnbins,range=foilrange,label="Fit (NTSDA > 0)",title=foiltitle,xlabel=foilxlabel)
+        self.HTgtFoilMC = MyHist.MyHist(name="TgtFoil",bins=foilnbins,range=foilrange,label="MC",title=foiltitle,xlabel=foilxlabel)
+        self.HOriginFoil = MyHist.MyHist(name="TgtFoil",bins=foilnbins,range=foilrange,label="MC Origin",title=foiltitle,xlabel=foilxlabel)
         costrange = [-0.8,0.8]
         costtitle ="Target Cos($\\Theta$)"
         costxlabel="Cos($\\Theta$)"
         costnbins=50
-        self.HTgtCosT = MyHist.MyHist(name="HTgtCosT",bins=costnbins,range=costrange,label="Fit",title=costtitle,xlabel=costxlabel)
-        self.HTgtCosTRef = MyHist.MyHist(name="HTgtCosT",bins=costnbins,range=costrange,label="Fit (NTSDA == 0)",title=costtitle,xlabel=costxlabel)
-        self.HTgtCosTNotRef = MyHist.MyHist(name="HTgtCosT",bins=costnbins,range=costrange,label="Fit (NTSDA > 0)",title=costtitle,xlabel=costxlabel)
-        self.HTgtCosTMC = MyHist.MyHist(name="HTgtCosT",bins=costnbins,range=costrange,label="MC",title=costtitle,xlabel=costxlabel)
-        self.HOriginCosT = MyHist.MyHist(name="HTgtCosT",bins=costnbins,range=costrange,label="MC Origin",title=costtitle,xlabel=costxlabel)
+        self.HTgtCosT = MyHist.MyHist(name="TgtCosT",bins=costnbins,range=costrange,label="Fit",title=costtitle,xlabel=costxlabel)
+        self.HTgtCosTRef = MyHist.MyHist(name="TgtCosT",bins=costnbins,range=costrange,label="Fit (NTSDA == 0)",title=costtitle,xlabel=costxlabel)
+        self.HTgtCosTNotRef = MyHist.MyHist(name="TgtCosT",bins=costnbins,range=costrange,label="Fit (NTSDA > 0)",title=costtitle,xlabel=costxlabel)
+        self.HTgtCosTMC = MyHist.MyHist(name="TgtCosT",bins=costnbins,range=costrange,label="MC",title=costtitle,xlabel=costxlabel)
+        self.HOriginCosT = MyHist.MyHist(name="TgtCosT",bins=costnbins,range=costrange,label="MC Origin",title=costtitle,xlabel=costxlabel)
         # fit quality
-        self.HTrkQual = MyHist.MyHist(name="HTrkQual",bins=100,range=[0.0,1.0],label="TrkQual",title="Track Quality",xlabel="ANN Result")
-        self.HFitCon = MyHist.MyHist(name="HFitCon",bins=100,range=[0.0,1.0],label="FitCon",title="Fit Consistency",xlabel="")
-        self.HNHits = MyHist.MyHist(name="HNHits",bins=100,range=[0.5,100.5],label="NActive",title="Fit N Hits",xlabel="N Hits")
+        self.HTrkQual = MyHist.MyHist(name="TrkQual",bins=100,range=[0.0,1.0],label="TrkQual",title="Track Quality",xlabel="ANN Result")
+        self.HFitCon = MyHist.MyHist(name="FitCon",bins=100,range=[0.0,1.0],label="FitCon",title="Fit Consistency",xlabel="")
+        self.HNHits = MyHist.MyHist(name="NHits",bins=100,range=[0.5,100.5],label="NActive",title="Fit N Hits",xlabel="N Hits")
 
         # legacy variables
 #        for isid in range(len(self.TrackerSIDs)):
 #            loc = "@"+SID.SurfaceName(self.TrackerSIDs[isid])
 
         TDrange = [-1.0,2.0]
-        self.HTDmomall = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="Pz/Pt (all)",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDLHall = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="$\\Lambda/R$ (all)",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDparall = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="tanDip (all)",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDmom = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="Pz/Pt@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDLH = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="$\\Lambda/R$@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDpar = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="tanDip@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDmomall = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="Pz/Pt (all)",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDLHall = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="$\\Lambda/R$ (all)",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDparall = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="tanDip (all)",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDmom = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="Pz/Pt@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDLH = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="$\\Lambda/R$@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDpar = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="tanDip@TT_Front",title="TanDip",xlabel="Tan($\\lambda$)")
         d0range = [-10,400]
-        self.Hd0 = MyHist.MyHist(name="Hd0",bins=50,range=d0range,label="No Cut",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
-        self.Hd0nste0 = MyHist.MyHist(name="Hd0",bins=50,range=d0range,label="N$_{ST}$==0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
-        self.Hd0nstg0 = MyHist.MyHist(name="Hd0",bins=50,range=d0range,label="N$_{ST}$>0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
+        self.Hd0 = MyHist.MyHist(name="d0",bins=50,range=d0range,label="No Cut",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
+        self.Hd0nstfe0 = MyHist.MyHist(name="d0",bins=50,range=d0range,label="N$_{ST Foil}$==0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
+        self.Hd0nstfg0 = MyHist.MyHist(name="d0",bins=50,range=d0range,label="N$_{ST Foil}$>0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
+        self.Hd0nstce0 = MyHist.MyHist(name="d0",bins=50,range=d0range,label="N$_{ST Cyl.}$==0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
+        self.Hd0nstcg0 = MyHist.MyHist(name="d0",bins=50,range=d0range,label="N$_{ST Cyl.}$>0",title="d0@TT_Front",xlabel="d$_{0}$ (mm)")
         rmaxrange = [425,725]
-        self.Hrmax = MyHist.MyHist(name="Hrmax",bins=50,range=rmaxrange,label="No Cut",title="maxr@TT_Front",xlabel="R$_{max}$ (mm)")
-        self.Hrmaxnopae0 = MyHist.MyHist(name="Hrmax",bins=50,range=rmaxrange,label="N$_{OPA}$==0",title="maxr@TT_Front",xlabel="R$_{max}$ (mm)")
-        self.Hrmaxnopag0 = MyHist.MyHist(name="Hrmax",bins=50,range=rmaxrange,label="N$_{OPA}$>0",title="maxr@TT_Front",xlabel="R$_{max}$ (mm)")
+        self.Hrmax = MyHist.MyHist(name="rmax",bins=50,range=rmaxrange,label="No Cut",title="R$_{max}$@TT_Front",xlabel="R$_{max}$ (mm)")
+        self.Hrmaxnopae0 = MyHist.MyHist(name="rmax",bins=50,range=rmaxrange,label="N$_{OPA}$==0",title="R$_{max}$@TT_Front",xlabel="R$_{max}$ (mm)")
+        self.Hrmaxnopag0 = MyHist.MyHist(name="rmax",bins=50,range=rmaxrange,label="N$_{OPA}$>0",title="R$_{max}$@TT_Front",xlabel="R$_{max}$ (mm)")
         TDrange = [0.0,2.0]
-        self.HTD = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="No Cut",title="TanDip",xlabel="Tan($\\lambda$)")
-        self.HTDcut = MyHist.MyHist(name="HTD",bins=50,range=TDrange,label="N$_{ST}$>0 & N$_{OPA}$==0",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTD = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="No Cut",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDcc = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="Cutset C",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDnf = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="N$_{ST Foil}$>0 & N$_{OPA}$==0",title="TanDip",xlabel="Tan($\\lambda$)")
+        self.HTDnc = MyHist.MyHist(name="TD",bins=50,range=TDrange,label="N$_{ST Cyl.}$>0 & N$_{OPA}$==0",title="TanDip",xlabel="Tan($\\lambda$)")
         momrange=[85,125]
-        self.HMom = MyHist.MyHist(name="HMom",bins=50,range=momrange,label="No Cut",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
-        self.HMomcc = MyHist.MyHist(name="HMom",bins=50,range=momrange,label="Cutset C",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
-        self.HMomni = MyHist.MyHist(name="HMom",bins=50,range=momrange,label="N$_{ST}$>0 & N$_{OPA}$==0",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
-        costrange=[0.4,0.8]
-        self.HCosT = MyHist.MyHist(name="HCosT",bins=50,range=momrange,label="No Cut",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
-        self.HCosTcc = MyHist.MyHist(name="HCosT",bins=50,range=momrange,label="Cutset C",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
-        self.HCosTni = MyHist.MyHist(name="HCosT",bins=50,range=momrange,label="N$_{ST}$>0 & N$_{OPA}$==0",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
+        self.HMom = MyHist.MyHist(name="Mom",bins=50,range=momrange,label="No Cut",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
+        self.HMomcc = MyHist.MyHist(name="Mom",bins=50,range=momrange,label="Cutset C",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
+        self.HMomnf = MyHist.MyHist(name="Mom",bins=50,range=momrange,label="N$_{ST Foil}$>0 & N$_{OPA}$==0",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
+        self.HMomnc = MyHist.MyHist(name="Mom",bins=50,range=momrange,label="N$_{ST Cyl.}$>0 & N$_{OPA}$==0",title="Momentum@TT_Front",xlabel="Momentum (MeV)")
+        costrange=[0.0,1.0]
+        self.HCosT = MyHist.MyHist(name="CosT",bins=50,range=costrange,label="No Cut",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
+        self.HCosTcc = MyHist.MyHist(name="CosT",bins=50,range=costrange,label="Cutset C",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
+        self.HCosTnf = MyHist.MyHist(name="CosT",bins=50,range=costrange,label="N$_{ST Foil}$>0 & N$_{OPA}$==0",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
+        self.HCosTnc = MyHist.MyHist(name="CosT",bins=50,range=costrange,label="N$_{ST Cyl.}$>0 & N$_{OPA}$==0",title="Cos($\\Theta$)@TT_Front",xlabel="P$_{z}$/P")
 
     def Loop(self,files):
         elPDG = 11
@@ -201,7 +208,7 @@ class DeRes(object):
             self.HFitCon.fill(np.array(FitCon))
             self.HNHits.fill(np.array(NHits))
 
-            # define good MC selection first, to allow downstream comparisons
+            # define good MC selection first, to allow downstfream comparisons
             SegsMC = segsMC[:,0] # segments (of 1st MC match) of 1st track
             TrkMC = trkMC[:,0,0] # primary MC match of 1st track
             # basic consistency test
@@ -264,10 +271,18 @@ class DeRes(object):
                 self.HTrkNotRefRespMom[isid].fill(np.array(momnotrefresp))
 
             # count IPA and target intersections
-            self.HNST.fill(np.array(ak.count_nonzero(Segs[goodFit].sid==SID.ST_Foils(),axis=1)))
-            self.HNIPA.fill(np.array(ak.count_nonzero(Segs[goodFit].sid==SID.IPA(),axis=1)))
-            self.HNTSDA.fill(np.array(ak.count_nonzero(Segs[goodFit].sid==SID.TSDA(),axis=1)))
-            self.HNOPA.fill(np.array(ak.count_nonzero(Segs[goodFit].sid==SID.OPA(),axis=1)))
+            gSegs = Segs[goodFit]
+            glhpars = lhpars[goodFit]
+            gstf = gSegs.sid==SID.ST_Foils()
+            gstc = np.logical_or((gSegs.sid==SID.ST_Outer()),(gSegs.sid==SID.ST_Front()))
+            nstf = ak.count_nonzero(gstf,axis=1)
+            nstc = ak.count_nonzero(gstc,axis=1)
+
+            self.HNSTF.fill(np.array(nstf))
+            self.HNSTC.fill(np.array(nstc))
+            self.HNIPA.fill(np.array(ak.count_nonzero(gSegs.sid==SID.IPA(),axis=1)))
+            self.HNTSDA.fill(np.array(ak.count_nonzero(gSegs.sid==SID.TSDA(),axis=1)))
+            self.HNOPA.fill(np.array(ak.count_nonzero(gSegs.sid==SID.OPA(),axis=1)))
             foilsegs = Segs.sid==SID.ST_Foils()
             ipasegs = Segs.sid==SID.IPA()
             stdmom = ak.sum(Segs[foilsegs].dmom,axis=1)
@@ -278,7 +293,7 @@ class DeRes(object):
             self.HIPADMom.fill(np.array(ipadmom))
             self.HAllDMom.fill(np.array(stdmom + ipadmom))
             # Also for MC
-            self.HNSTMC.fill(np.array(ak.count_nonzero(SegsMC[goodFit].sid==SID.ST_Foils(),axis=1)))
+            self.HNSTFMC.fill(np.array(ak.count_nonzero(SegsMC[goodFit].sid==SID.ST_Foils(),axis=1)))
             self.HNIPAMC.fill(np.array(ak.count_nonzero(SegsMC[goodFit].sid==SID.IPA(),axis=1)))
             foilsegsMC = SegsMC.sid==SID.ST_Foils()
             ipasegsMC = SegsMC.sid==SID.IPA()
@@ -364,11 +379,8 @@ class DeRes(object):
             self.HTgtFoilMC.fill(np.array(list(map(TargetFoil,ak.flatten(tgtsegsmc.pos.z())))))
 
             # legacy
-            gSegs = Segs[goodFit]
-            glhpars = lhpars[goodFit]
 
             nopa = ak.count_nonzero(gSegs.sid==SID.OPA(),axis=1)
-            nst = ak.count_nonzero(gSegs.sid==SID.ST_Foils(),axis=1)
 
             self.HTDmomall.fill(np.array(ak.flatten(gSegs.mom.Z()/gSegs.mom.rho())))
             self.HTDLHall.fill(np.array(ak.flatten(glhpars.tanDip)))
@@ -382,25 +394,33 @@ class DeRes(object):
 
             # test new cuts
             self.Hd0.fill(np.array(ak.flatten(flhpars.d0)))
-            self.Hd0nste0.fill(np.array(ak.flatten(flhpars[nst==0].d0)))
-            self.Hd0nstg0.fill(np.array(ak.flatten(flhpars[nst>0].d0)))
+            self.Hd0nstfe0.fill(np.array(ak.flatten(flhpars[nstf==0].d0)))
+            self.Hd0nstfg0.fill(np.array(ak.flatten(flhpars[nstf>0].d0)))
+            self.Hd0nstce0.fill(np.array(ak.flatten(flhpars[nstc==0].d0)))
+            self.Hd0nstcg0.fill(np.array(ak.flatten(flhpars[nstc>0].d0)))
 
             self.Hrmax.fill(np.array(ak.flatten(flhpars.maxr)))
             self.Hrmaxnopae0.fill(np.array(ak.flatten(flhpars[nopa==0].maxr)))
             self.Hrmaxnopag0.fill(np.array(ak.flatten(flhpars[nopa>0].maxr)))
 
-            self.HTD.fill(np.array(ak.flatten(fsegs.mom.Z()/fsegs.mom.rho())))
-            cfsegs = fsegs[(nst>0)&(nopa==0)]
-            self.HTDcut.fill(np.array(ak.flatten(cfsegs.mom.Z()/cfsegs.mom.rho())))
-
+            cfsegs = fsegs[(nstf>0)&(nopa==0)]
+            ccsegs = fsegs[(nstc>0)&(nopa==0)]
             cutsetc = (flhpars.d0<105) & (fsegs.mom.cosTheta() > 0.5) & (fsegs.mom.cosTheta() < 0.7071) & (flhpars.maxr > 450) & (flhpars.maxr < 680)
             ccfsegs = fsegs[cutsetc]
+
+            self.HTD.fill(np.array(ak.flatten(fsegs.mom.Z()/fsegs.mom.rho())))
+            self.HTDnf.fill(np.array(ak.flatten(cfsegs.mom.Z()/cfsegs.mom.rho())))
+            self.HTDnc.fill(np.array(ak.flatten(ccsegs.mom.Z()/ccsegs.mom.rho())))
+            self.HTDcc.fill(np.array(ak.flatten(ccfsegs.mom.Z()/ccfsegs.mom.rho())))
+
             self.HMom.fill(np.array(ak.flatten(fsegs.mom.magnitude())))
-            self.HMomni.fill(np.array(ak.flatten(cfsegs.mom.magnitude())))
+            self.HMomnf.fill(np.array(ak.flatten(cfsegs.mom.magnitude())))
+            self.HMomnc.fill(np.array(ak.flatten(ccsegs.mom.magnitude())))
             self.HMomcc.fill(np.array(ak.flatten(ccfsegs.mom.magnitude())))
 
             self.HCosT.fill(np.array(ak.flatten(fsegs.mom.cosTheta())))
-            self.HCosTni.fill(np.array(ak.flatten(cfsegs.mom.cosTheta())))
+            self.HCosTnf.fill(np.array(ak.flatten(cfsegs.mom.cosTheta())))
+            self.HCosTnc.fill(np.array(ak.flatten(ccsegs.mom.cosTheta())))
             self.HCosTcc.fill(np.array(ak.flatten(ccfsegs.mom.cosTheta())))
 
             # test for missing intersections
@@ -413,7 +433,7 @@ class DeRes(object):
             hasall = hasent & hasmid & hasxit
             missing = ak.count(hasall,0) - ak.count_nonzero(hasall)
             if(missing > 0):
-                print("Found",missing,"Instances of missing intersections in",ak.count(hasall,0),"tracks")
+                print("Found",missing,"Instfances of missing intersections in",ak.count(hasall,0),"tracks")
                 for itrk in range(len(hasall)):
                     if (not hasall[itrk]):
                         print("Missing intersection: ",hasent[itrk],hasmid[itrk],hasxit[itrk]," eid ",runnum[itrk],":",subrun[itrk],":",event[itrk],sep="")
@@ -441,13 +461,14 @@ class DeRes(object):
     def PlotMaterial(self):
         fig, ([aninter,admom],[aninterMC,admomMC]) = plt.subplots(2,2,layout='constrained', figsize=(10,10))
         self.HNIPA.plot(aninter)
-        self.HNST.plot(aninter)
+        self.HNSTF.plot(aninter)
+        self.HNSTC.plot(aninter)
         self.HNTSDA.plot(aninter)
         self.HNOPA.plot(aninter)
         aninter.legend(loc="upper right")
 
         self.HNIPAMC.plot(aninterMC)
-        self.HNSTMC.plot(aninterMC)
+        self.HNSTFMC.plot(aninterMC)
         aninterMC.legend(loc="upper right")
 
         self.HIPADMom.plot(admom)
@@ -504,25 +525,34 @@ class DeRes(object):
         self.HTDLH.plot(atd)
         atd.legend(loc="upper right")
         self.Hd0.plot(ad0)
-        self.Hd0nste0.plot(ad0)
-        self.Hd0nstg0.plot(ad0)
+        self.Hd0nstfe0.plot(ad0)
+        self.Hd0nstfg0.plot(ad0)
+        self.Hd0nstce0.plot(ad0)
+        self.Hd0nstcg0.plot(ad0)
         ad0.legend(loc="upper right")
         self.Hrmax.plot(armax)
         self.Hrmaxnopae0.plot(armax)
         self.Hrmaxnopag0.plot(armax)
         armax.legend(loc="upper right")
         self.HTD.plot(atdc)
-        self.HTDcut.plot(atdc)
+        self.HTDcc.plot(atdc)
+        self.HTDnc.plot(atdc)
+        self.HTDnf.plot(atdc)
         atdc.legend(loc="upper right")
-        fig, (amom,acost) = plt.subplots(2,1,layout='constrained', figsize=(5,5))
+        fig, (amom,acost) = plt.subplots(1,2,layout='constrained', figsize=(10,5))
         self.HMom.plot(amom)
         self.HMomcc.plot(amom)
-        self.HMomni.plot(amom)
+        self.HMomnf.plot(amom)
+        self.HMomnc.plot(amom)
         amom.legend(loc="upper right")
         self.HCosT.plot(acost)
         self.HCosTcc.plot(acost)
-        self.HCosTni.plot(acost)
-        acost.legend(loc="upper right")
+        self.HCosTnf.plot(acost)
+        self.HCosTnc.plot(acost)
+        acost.legend(loc="upper left")
+        print("CutSet C Count",np.sum(self.HCosTcc.data))
+        print("Cut on NCyl Count",np.sum(self.HCosTnc.data))
+        print("Cut on NFoil Count",np.sum(self.HCosTnf.data))
 
     def Write(self,savefile):
         with h5py.File(savefile, 'w') as hdf5file:

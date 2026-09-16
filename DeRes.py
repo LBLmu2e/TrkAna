@@ -30,12 +30,13 @@ def TargetFoil(tgtz):
 
 
 class DeRes(object):
-    def __init__(self,momrange,costrange,minNHits,minFitCon,minTrkQual):
+    def __init__(self,momrange,costrange,minNHits,minFitCon,minTrkQual,index=0):
         self.MomRange = momrange
         self.CosTRange = costrange
         self.minNHits = minNHits
         self.minFitCon = minFitCon
         self.minTrkQual = minTrkQual
+        self.index = index
 
         nDeltaMomBins = 200
         nMomBins = 200
@@ -195,13 +196,13 @@ class DeRes(object):
             trkMC = batch['trkmcsim']  # MC genealogy of particles
             segsMC = batch['trksegsmc'] # SurfaceStep infor for true primary particle
             # should be 1 track/event
-            assert(ak.sum(ak.count_nonzero(nhits,axis=1)!=1) == 0)
-            Segs = segs[:,0]
-            lhpars = lhpars[:,0]
+#            assert(ak.sum(ak.count_nonzero(nhits,axis=1)!=1) == 0)
+            Segs = segs[:,self.index]
+            lhpars = lhpars[:,self.index]
 #            print("Segs len",len(Segs),"lhpars len",len(lhpars))
-            FitCon = fitcon[:,0]
-            NHits = nhits[:,0]
-            TrkQual = trkQual[:,0]
+            FitCon = fitcon[:,self.index]
+            NHits = nhits[:,self.index]
+            TrkQual = trkQual[:,self.index]
             assert(len(Segs)==len(NHits))
 
             self.HTrkQual.fill(np.array(TrkQual))
@@ -209,8 +210,8 @@ class DeRes(object):
             self.HNHits.fill(np.array(NHits))
 
             # define good MC selection first, to allow downstfream comparisons
-            SegsMC = segsMC[:,0] # segments (of 1st MC match) of 1st track
-            TrkMC = trkMC[:,0,0] # primary MC match of 1st track
+            SegsMC = segsMC[:,self.index] # segments (of 1st MC match) of indexed track
+            TrkMC = trkMC[:,self.index,0] # primary MC match of indexed track
             # basic consistency test
             assert((len(runnum) == len( Segs)) & (len(Segs) == len(SegsMC)) & (len(Segs) == len(TrkMC)) & (len(NHits) == len(Segs)))
             goodMC = (TrkMC.pdg == elPDG) & (TrkMC.trkrel._rel == 0)

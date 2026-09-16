@@ -19,7 +19,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 import math
 from scipy import special
-import MyHist
+import HistUtil
 
 
 
@@ -29,14 +29,14 @@ class DriftDiag(object):
         dresrange = (-2.5,2.5)
         drestitle = "Drift Resolution"
         dresxlabel = "$R_{drift}$ - MC DOCA (mm)"
-        self.Hdres = MyHist.MyHist(name="dres",label="All",title=drestitle,xlabel=dresxlabel,bins=dresbins,range=dresrange)
-        self.Hstate = MyHist.MyHist(name="state",label="All",title="Hit State",bins=5,range=[-3.5,1.5])
+        self.Hdres = HistUtil.new_hist(name="dres",label="All",title=drestitle,xlabel=dresxlabel,bins=dresbins,range=dresrange)
+        self.Hstate = HistUtil.new_hist(name="state",label="All",title="Hit State",bins=5,range=[-3.5,1.5])
         nhitsrange = [-0.5,99.5]
         nhitsbins = 100
-        self.Hnhits = MyHist.MyHist(name="nhits",label="All",title="N Hits",bins=nhitsbins,range=nhitsrange)
-        self.Hnactive = MyHist.MyHist(name="nactive",label="Active",title="N Hits",bins=nhitsbins,range=nhitsrange)
-        self.Hndrift = MyHist.MyHist(name="ndrift",label="Drift",title="N Hits",bins=nhitsbins,range=nhitsrange)
-        self.Hnnull = MyHist.MyHist(name="nnull",label="Null",title="N Hits",bins=nhitsbins,range=nhitsrange)
+        self.Hnhits = HistUtil.new_hist(name="nhits",label="All",title="N Hits",bins=nhitsbins,range=nhitsrange)
+        self.Hnactive = HistUtil.new_hist(name="nactive",label="Active",title="N Hits",bins=nhitsbins,range=nhitsrange)
+        self.Hndrift = HistUtil.new_hist(name="ndrift",label="Drift",title="N Hits",bins=nhitsbins,range=nhitsrange)
+        self.Hnnull = HistUtil.new_hist(name="nnull",label="Null",title="N Hits",bins=nhitsbins,range=nhitsrange)
 
     def Loop(self,files):
         ibatch = 0
@@ -79,13 +79,13 @@ class DriftDiag(object):
 
     def Plot(self):
         fig, (anhits,astate) = plt.subplots(1,2,layout='constrained', figsize=(15,5))
-        self.Hnhits.plot(anhits)
-        self.Hnactive.plot(anhits)
-        self.Hndrift.plot(anhits)
-        self.Hnnull.plot(anhits)
+        HistUtil.plot(self.Hnhits,anhits)
+        HistUtil.plot(self.Hnactive,anhits)
+        HistUtil.plot(self.Hndrift,anhits)
+        HistUtil.plot(self.Hnnull,anhits)
         anhits.legend(loc="upper right")
-        self.Hstate.plot(astate)
+        HistUtil.plot(self.Hstate,astate)
 
         fig, (res,dist) = plt.subplots(1,2,layout='constrained', figsize=(15,5))
-        self.Hdres.plot(res)
+        HistUtil.plot(self.Hdres,res)
 
